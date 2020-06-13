@@ -1,8 +1,16 @@
 import React from "react"
 
 const PostLayout = props => {
-  console.log(props)
-  return <div>hello</div>
+  return (
+    <>
+      <h1>{props.pageContext.data.title.text}</h1>
+      <div
+        dangerouslySetInnerHTML={
+          { __html: props.pageContext.data.content.html }
+        }
+      />
+    </>
+  )
 }
 
 export default PostLayout

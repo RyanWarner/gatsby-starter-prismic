@@ -3,7 +3,7 @@ const path = require('path')
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
-  // Query all Pages with their IDs and template data.
+  // Query all Pages with their IDs and content data.
   const pages = await graphql(`
     {
       allPrismicPost {
@@ -13,10 +13,13 @@ exports.createPages = async ({ graphql, actions }) => {
               title {
                 text
               }
+              content {
+                html
+              }
             }
-            id
-            first_publication_date
             uid
+            first_publication_date
+            id
           }
         }
       }
@@ -27,12 +30,11 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create pages for each Post in Prismic.
   pages.data.allPrismicPost.edges.forEach((edge) => {
-    console.log('edge.node.uid', edge.node.uid)
     createPage({
       path: `${edge.node.uid}`,
       component: postTemplate,
       context: {
-        id: edge.node.id,
+        ...edge.node,
       },
     })
   })
